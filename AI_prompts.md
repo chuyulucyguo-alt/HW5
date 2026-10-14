@@ -93,3 +93,12 @@ Make it look like a desk someone would actually want to work at. Commit to a sho
 - nothing in the project contains a real API key or any model other than gpt-6-luna
 
 Show me `git status` and the full list of files that would be committed before anything goes up, and only commit and push to `main` after I say OK. Don't reset the database: `campus_customs_new.db` stays in its final state with checking at $160. Add the Problem 10 and 11 entries here first. If the push needs a login or fails, tell me what to do instead of working around it.
+
+**Follow-up:** Make the README walk a grader through running the app in order:
+1. Copy the original database over the working copy when you need a clean run.
+2. Start the MCP server.
+3. Start the FastAPI backend.
+4. Start the React board.
+5. Reset the database before a full three-ticket run.
+
+The first README only had a quick start (venv, backend, board). It didn't explain the original-vs-working database copy, how the MCP server gets started, or that the database must be reset before running all three tickets.

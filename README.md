@@ -2,9 +2,9 @@
 
 Five PydanticAI agents (Boss, Inventory, Accounting, Facilities, Customer Service) work the Campus Customs shop tickets. They read and change the shop's SQLite database **only** through a FastMCP server. A FastAPI backend runs them, and a React "front desk" dashboard lets a person watch them work and sign any payment they prepare.
 
-## Quick start
+## Setup (once)
 
-You need Python 3.12+, Node 20+, and a Portkey API key. Every agent uses `gpt-6-luna` through Portkey.
+You need Python 3.12+, Node 20+, and a Portkey API key. Every agent uses `gpt-6-luna` through Portkey. Run these from the project root:
 
 ```bash
 python3 -m venv .venv
@@ -18,19 +18,67 @@ source .venv/bin/activate && pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Put your `PORTKEY_API_KEY` in `.env`. Then start the backend (it launches the MCP server itself from `.mcp.json`):
+Open `.env` and put your key after `PORTKEY_API_KEY=`.
+
+## How to run it
+
+### 1. Copy the original database to the working copy (when you need a clean run)
+
+`data/campus_customs.db` is the original and is never changed. The agents and the board only change the working copy, `data/campus_customs_new.db`. To start from clean data, copy the original over it:
+
+```bash
+cp data/campus_customs.db data/campus_customs_new.db
+```
+
+The repo ships the working copy in its **final graded state** (all three tickets worked, checking at $160). Skip this step if you want to look at that state first.
+
+### 2. Start the MCP server
+
+The server is `mcp_server/server.py` (FastMCP, stdio, 13 tools over `data/campus_customs_new.db`). It's registered in `.mcp.json` as `campus-customs`, so:
+
+- **Claude Code** starts it automatically when you open this folder. Approve the `campus-customs` server once when asked.
+- **The FastAPI backend** (step 3) starts its own copy from the same `.mcp.json`, so you don't need a separate terminal for the app.
+- **To run it by hand** (e.g. to test it), from the project root with the venv active:
+
+```bash
+python mcp_server/server.py
+```
+
+It waits for an MCP client on stdin/stdout. Press Ctrl+C to stop it.
+
+### 3. Start the FastAPI backend
+
+In a terminal with the venv active:
 
 ```bash
 cd backend && uvicorn main:app --reload --port 8000
 ```
 
-In a second terminal, start the dashboard and open http://localhost:5173:
+The API is now at http://localhost:8000, and you can check it at http://localhost:8000/api/health. Every route is listed in `output/harness.md`.
+
+### 4. Start the React board
+
+In a second terminal:
 
 ```bash
 cd frontend && npm install && npm run dev
 ```
 
-On the board: pick a ticket → **Send to the team →** → watch the desks → sign or void the checks under **Needs your signature**. **↺ Fresh day** resets the working database to the original.
+Open http://localhost:5173. The board calls the backend at `http://localhost:8000` (set in `frontend/.env`), and the backend allows that origin through CORS.
+
+### 5. Reset the database before a full three-ticket run
+
+Always start a full run of tickets 101, 102 and 103 from clean data. Click **↺ Fresh day** in the board's top bar, which copies the original database over the working copy and keeps the audit trail. Or do the same from a terminal while the backend is running:
+
+```bash
+curl -X POST http://localhost:8000/api/reset
+```
+
+Checking should read **$3,400.00** afterward. Then, on the board:
+
+1. Send each ticket to the team one at a time (**Send to the team →**). Wait for its RESOLVED stamp before starting the next; the backend runs one ticket at a time.
+2. Watch the desks, the desk log, and the "who did what" report.
+3. In **Needs your signature**, type your name and **Sign & pay**, **Sign & order**, or **Void** each check. Only a signature moves money, and the cash drawer drops when you sign.
 
 ## Layout
 
