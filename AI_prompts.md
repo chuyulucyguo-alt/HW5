@@ -72,15 +72,25 @@ Make it look like a desk someone would actually want to work at. Commit to a sho
 
 ## Problem 10: Reflection
 
-**Prompt:** Fill in the Reflection tab of `output/desk_tickets.html` using my own answers, kept in my voice and fleshed out with the real numbers from the run. Here is what I think:
+**Prompt:** Fill in the Reflection tab of `output/desk_tickets.html` with my own answers, citing the ticket tabs and the Cash tab as evidence. Here is what I think:
 
-- **How the agents did on each ticket.** 101 had a good outcome but Accounting drafted rent on its own and Inventory and Accounting were each asked twice. 102 was the best run, with `list_approvals` stopping a duplicate and only a missing ticket link. 103 had exactly right discount math but the weakest coordination: Inventory was asked three times and the 10% discount never reached Customer Service.
-- **Actual vs. my Expected plan.** 101 had 5 hand-offs instead of 3, with the Boss fanning out in parallel. 102 was the closest match, with one extra Boss → Accounting call. 103 ran in parallel, so no discount was offered.
-- **What would have been simpler as one agent.** Facilities and Inventory were thin, and a single agent working in order would have avoided the repeats. Multiple agents still made sense for separation of duties.
-- **Three problems the team can solve.** Another stockout tied to an overdue invoice, another bulk discount request, and next month's rent competing with other bills.
-- **Three problems it can't solve.** Actually sending email (needs a `send_email` tool and a Communications agent), recording sales and receivables (needs orders tables and tools plus a Sales/AR agent), and forecasting cash shortfalls (needs a `forecast_cash` tool and a Treasury agent).
-
-**Follow-up:** Replace the Reflection tab with my revised answers, which point back to the evidence on the other tabs (e.g. "Ticket 101 tab", "Cash tab") and use the run's exact numbers ($52.20 / $46.40 quotes, 19 and 23 model calls, $160 ending balance, $340 under the cushion, next rent due 2026-10-02). The first version expanded my answers into long tables with extra commentary I didn't write, instead of keeping them short and tied to the tabs.
+1. **How the agents did on each ticket.**
+   - **101:** The facts were right (0 in size S, invoice 501 overdue) and the customer reply hid costs and vendors. But Accounting prepared rent on its own (out of scope), and Inventory and Accounting were each asked twice. 19 model calls, about 60k tokens.
+   - **102:** The best run. It took 35 seconds, and `list_approvals` blocked a duplicate rent request. The one gap was that rent request #1 wasn't linked to ticket 102.
+   - **103:** The discount math was exact ($52.20 at 10%, $46.40 at 20%), but Inventory was asked 3 times and the approved discount never reached Customer Service. 23 calls, about 64k tokens.
+2. **Actual vs. Expected.**
+   - **101:** I expected 3 hand-offs starting with Inventory. Actual was 5, with the Boss calling Customer Service, Inventory, and Accounting in parallel. The outcome matched.
+   - **102:** Closest match. The only differences were one extra Boss → Accounting call and the missing ticket link.
+   - **103:** I expected Accounting first, then Customer Service with the numbers. Actual was 5 hand-offs in parallel, so the customer reply offered no discount.
+3. **What would have been simpler as one agent.** Facilities and Inventory. On 102, Facilities only read lease 1 and handed payment to Accounting; on 101, Inventory only called `get_ticket`. One agent working in order would also have avoided the repeated Inventory questions on 103. Multiple agents were still worth it for separation of duties: only Accounting prepares payments, and Customer Service never shows costs to customers.
+4. **Three new problems the team could solve.**
+   - CC-TEE-WHITE size M runs out with an overdue Bulldog Print Co invoice, like 101 (`get_ticket`, `list_vendors`, `prepare_payment`).
+   - Another club asks for a bulk discount on CC-HOOD-NAVY, like 103 (`quote_bulk_price`, `prepare_purchase`).
+   - The next $2,400 rent on lease 1 comes due 2026-10-02, after the payment on the Cash tab (`get_cash_and_bills`, `prepare_payment`).
+5. **Three problems it could not solve, and what's needed.**
+   - **Sending messages:** Facilities only drafted the landlord note on 102. Needs a `send_email` tool and a Communications agent, with human approval before sending.
+   - **Recording sales and receivables:** no hoodie sale was recorded for 103 because there's no orders table. Needs `create_order`, `record_sale`, and `create_invoice` tools and a Sales/AR agent.
+   - **Cash shortfalls:** the Cash tab ends at $160, $340 under the $500 cushion, so the $264 restock was held. Needs a `forecast_cash` tool reading `payments` and receivables, and a Treasury agent.
 
 **Follow-up:** Tie every reflection answer to this app and the three tickets we actually ran, citing the ticket tabs and the Cash tab on the same page as evidence (specific delegations, tool calls, replies, dollar amounts), not generic AI-agent talk. Also make the project match the expected file layout: a root `requirements.txt`, `.env.example`, `.gitignore`, `.mcp.json`, and `README.md`; `data/` with both databases; `mcp_server/` with `server.py` and `README.md`; `frontend/`; `backend/` with `main.py`, `models.py`, and the five prompt files; and `output/` with the harness, smoke test, desk page, design notes, resolved tickets and board, audit trail, and `github_url.txt`. The first version of the reflection named the tabs but didn't point to exact evidence on them, and the project was missing the root setup files and `github_url.txt`, used absolute paths in `.mcp.json`, and had extra per-folder requirements files.
 
