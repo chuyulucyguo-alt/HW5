@@ -1,0 +1,20 @@
+# Secrets: keep the real key out of git (.env.example is the template)
+/.env
+backend/.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Leftover temp file from an interrupted audit write
+output/*.json.tmp

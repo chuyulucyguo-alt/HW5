@@ -1,0 +1,197 @@
+{
+  "run_date": "2026-10-14",
+  "shop_date": "2026-08-31",
+  "starting_checking": 3400.0,
+  "ending_checking": 160.0,
+  "cash_matches_database": true,
+  "tickets": [
+    {
+      "id": 101,
+      "subject": "Bulldog tee",
+      "requester": "Tauhid Zaman",
+      "final_status": "in_progress",
+      "board_state": "resolved",
+      "outcome": "Size S tee is out of stock (0 on hand), so the order can't ship today. Overdue invoice 501 ($840, rush reprint of this exact size) was paid with my approval to release the reprint; the earliest arrival is about 5 days after payment (~2026-09-05). Customer told honestly, with no date promised.",
+      "cash_change": -840.0,
+      "agents": {
+        "boss": "Read ticket 101, sent Customer Service, Inventory and Accounting to work in parallel, checked the whole cash picture, set the ticket to waiting_on_approval, and briefed me on two yes/no payments.",
+        "customer_service": "Drafted the reply to Tauhid (out of size S, reprint timing not confirmed, offered to keep the request open) without mentioning invoices or vendors; asked Inventory about timing; set the ticket to in_progress.",
+        "inventory": "Confirmed 0 of 1 available and that invoice 501 already covers the reprint, so no duplicate order; earliest restock = 5 days after the invoice is paid. Asked Accounting whether 501 was paid.",
+        "accounting": "Confirmed invoice 501 is $840 and overdue; prepared payment request #2 ($840). Also prepared rent request #1 ($2,400) during this run (scope creep). Flagged that both together leave $160, under the $500 cushion.",
+        "facilities": "Not called."
+      },
+      "human_approvals": [
+        {
+          "request_id": 2,
+          "kind": "invoice",
+          "payee": "Bulldog Print Co",
+          "amount": 840.0,
+          "prepared_by": "accounting",
+          "decision": "approved",
+          "decided_by": "Lucy Guo",
+          "result": "Paid invoice 501. $840.00 from checking, approved by Lucy Guo; $160.00 left."
+        }
+      ],
+      "run": {
+        "run_id": "d6b9f190ff74",
+        "started": "2026-10-14T20:30:23+00:00",
+        "ended": "2026-10-14T20:32:22+00:00",
+        "model_calls": 19,
+        "tool_calls": 21,
+        "tokens": 60460,
+        "delegations": [
+          "boss -> customer_service",
+          "boss -> inventory",
+          "boss -> accounting",
+          "customer_service -> inventory",
+          "inventory -> accounting"
+        ],
+        "tools_by_agent": {
+          "boss": {
+            "get_ticket": 1,
+            "get_cash_and_bills": 1,
+            "list_approvals": 2,
+            "update_ticket": 1
+          },
+          "customer_service": {
+            "get_ticket": 1,
+            "update_ticket": 1
+          },
+          "inventory": {
+            "get_ticket": 2
+          },
+          "accounting": {
+            "get_ticket": 2,
+            "get_cash_and_bills": 1,
+            "list_approvals": 1,
+            "list_vendors": 1,
+            "prepare_payment": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 102,
+      "subject": "Rent due",
+      "requester": "Elm City Properties",
+      "final_status": "resolved",
+      "board_state": "resolved",
+      "outcome": "Rent of $2,400 for the Chapel Street lease was due 2026-09-02 and matched the landlord's email. I approved the payment; checking went $3,400 -> $1,000, lease next_due moved to 2026-10-02, and the ticket is resolved.",
+      "cash_change": -2400.0,
+      "agents": {
+        "boss": "Read ticket 102, called Facilities and Accounting, reused the existing rent request instead of duplicating it, set waiting_on_approval, and recommended rent as the top priority.",
+        "facilities": "Confirmed lease 1: $2,400 due 2026-09-02, two days after the shop date, matching the landlord's notice; no late fees invented; drafted a landlord note that doesn't claim the money was sent; asked Accounting to prepare the payment.",
+        "accounting": "Checked cash ($3,400 -> $1,000 after rent) and found rent request #1 already pending, so prepared no duplicate; noted that request #1 wasn't linked to ticket 102.",
+        "inventory": "Not called.",
+        "customer_service": "Not called."
+      },
+      "human_approvals": [
+        {
+          "request_id": 1,
+          "kind": "rent",
+          "payee": "Elm City Properties",
+          "amount": 2400.0,
+          "prepared_by": "accounting",
+          "decision": "approved",
+          "decided_by": "Lucy Guo",
+          "result": "Paid rent for lease 1; next due moved one month. $2,400.00 from checking, approved by Lucy Guo; $1,000.00 left."
+        }
+      ],
+      "run": {
+        "run_id": "c3de9b35ad94",
+        "started": "2026-10-14T20:32:33+00:00",
+        "ended": "2026-10-14T20:33:08+00:00",
+        "model_calls": 13,
+        "tool_calls": 15,
+        "tokens": 36908,
+        "delegations": [
+          "boss -> facilities",
+          "boss -> accounting",
+          "facilities -> accounting"
+        ],
+        "tools_by_agent": {
+          "boss": {
+            "get_ticket": 1,
+            "get_cash_and_bills": 1,
+            "list_approvals": 1,
+            "update_ticket": 1
+          },
+          "facilities": {
+            "get_ticket": 1,
+            "get_cash_and_bills": 1
+          },
+          "accounting": {
+            "get_cash_and_bills": 2,
+            "list_approvals": 2,
+            "get_ticket": 2
+          }
+        }
+      }
+    },
+    {
+      "id": 103,
+      "subject": "Bulk hoodie discount",
+      "requester": "Yale AI Club",
+      "final_status": "waiting_on_approval",
+      "board_state": "resolved",
+      "outcome": "8 of 20 size M hoodies are on hand and 12 are short (earliest restock 2026-09-05). Accounting cleared up to 10% off ($52.20 each, $1,044 for 20); 10-20% needs my approval. Inventory prepared a $264 restock (request #3), which I held because only $160 is left after rent and the invoice. Customer Service asked the club which discount they want and whether to take 8 now.",
+      "cash_change": 0.0,
+      "agents": {
+        "boss": "Read ticket 103, sent Customer Service, Accounting and Inventory to work in parallel, warned that rent + invoice + restock would leave -$104, and set waiting_on_approval.",
+        "accounting": "Ran quote_bulk_price at 10% ($52.20 / $1,044 / 57.9% margin) and 20% ($46.40 / $928 / 52.6%); said up to 10% is allowed without me, 10-20% needs me, and over 20% is never allowed.",
+        "inventory": "Confirmed 8 on hand in Aisle A and 12 short, with Bulldog Print Co 5-day lead (earliest 2026-09-05); prepared restock request #3 for 12 units at $264 and refused to add it twice (it was asked 3 times).",
+        "customer_service": "Drafted the reply to Yale AI Club: 8 available now, 12 about 5 days after a restock, $58 list / $1,160 for 20; asked what discount they want and whether to take 8 now. No costs revealed. Set the ticket to in_progress.",
+        "facilities": "Not called."
+      },
+      "human_approvals": [
+        {
+          "request_id": 3,
+          "kind": "purchase",
+          "payee": "Bulldog Print Co",
+          "amount": 264.0,
+          "prepared_by": "inventory",
+          "decision": "pending (not signed)",
+          "decided_by": null,
+          "result": null
+        }
+      ],
+      "run": {
+        "run_id": "25fe6c9267f0",
+        "started": "2026-10-14T20:33:16+00:00",
+        "ended": "2026-10-14T20:34:05+00:00",
+        "model_calls": 23,
+        "tool_calls": 24,
+        "tokens": 64426,
+        "delegations": [
+          "boss -> customer_service",
+          "boss -> accounting",
+          "boss -> inventory",
+          "accounting -> inventory",
+          "customer_service -> inventory"
+        ],
+        "tools_by_agent": {
+          "boss": {
+            "get_ticket": 1,
+            "get_cash_and_bills": 1,
+            "list_approvals": 1,
+            "update_ticket": 1
+          },
+          "customer_service": {
+            "get_ticket": 1,
+            "update_ticket": 1
+          },
+          "accounting": {
+            "get_ticket": 1,
+            "quote_bulk_price": 2
+          },
+          "inventory": {
+            "get_ticket": 3,
+            "check_stock_and_price": 2,
+            "list_vendors": 3,
+            "prepare_purchase": 2
+          }
+        }
+      }
+    }
+  ]
+}
